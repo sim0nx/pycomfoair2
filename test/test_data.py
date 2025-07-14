@@ -32,43 +32,43 @@ logger = logging.getLogger(__name__)
 
 
 def test_create_parse(tag: int, value: bytes, expect: bytes) -> None:
-    msg = ComfoAirBase._create_msg(tag, value)
-    assert msg == expect
+  msg = ComfoAirBase._create_msg(tag, value)
+  assert msg == expect
 
-    parsed = ComfoAirBase._parse_msg(msg)
-    assert parsed == [len(msg), 'msg', tag, value]
+  parsed = ComfoAirBase._parse_msg(msg)
+  assert parsed == [len(msg), 'msg', tag, value]
 
 
 def test_create_parse_hex(tag: int, value: str, expect: str) -> None:
-    test_create_parse(tag, bytes.fromhex(value), bytes.fromhex(expect))
+  test_create_parse(tag, bytes.fromhex(value), bytes.fromhex(expect))
 
 
 def test_bytes(buf: bytes):
-    n = 0
-    while buf:
-        res = ComfoAirBase._parse_msg(buf)
-        logger.debug(res)
-        end = res.pop(0)
-        if end == 0:
-            logger.debug('remainder: %s', buf.hex())
-            break
-        buf = buf[end:]
-        n += 1
+  n = 0
+  while buf:
+    res = ComfoAirBase._parse_msg(buf)
+    logger.debug(res)
+    end = res.pop(0)
+    if end == 0:
+      logger.debug('remainder: %s', buf.hex())
+      break
+    buf = buf[end:]
+    n += 1
 
-    logger.debug("matched %d times", n)
+  logger.debug('matched %d times', n)
 
 
 def test_static() -> int:
-    value = 'c073866d0606000000e2'
-    expect = '07f0003c0ac073866d0606000000e20707070f'
-    test_create_parse_hex(0x3c, value, expect)
-    return 0
+  value = 'c073866d0606000000e2'
+  expect = '07f0003c0ac073866d0606000000e20707070f'
+  test_create_parse_hex(0x3C, value, expect)
+  return 0
 
 
 if __name__ == '__main__':
-    if len(argv) == 1:
-        exit(test_static())
+  if len(argv) == 1:
+    exit(test_static())
 
-    for arg in argv[1:]:
-        with open(realpath(arg), 'rb') as f:
-            test_bytes(f.read())
+  for arg in argv[1:]:
+    with open(realpath(arg), 'rb') as f:
+      test_bytes(f.read())

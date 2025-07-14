@@ -32,28 +32,27 @@ logger = logging.getLogger(__name__)
 
 
 def main(url, level):
-    logger.info('Connecting...')
-    ca = ComfoAir(url)
-    ca.connect()
+  logger.info('Connecting...')
+  ca = ComfoAir(url)
+  ca.connect()
 
-    if not ca.transceive(0x9b, b'\x03', reply=0x9c, expect=b'\x03'):
-        print('Failed to switch to PC mode!')
-    elif not ca.transceive(0x99, pack('B', level)):
-        print('Failed to set fan speed!')
-    elif not ca.transceive(0x9b, b'\x00', reply=0x9c, expect=b'\x02'):
-        print('Failed to switch to CC-Ease mode!')
-    else:
-        exit(0)
+  if not ca.transceive(0x9B, b'\x03', reply=0x9C, expect=b'\x03'):
+    print('Failed to switch to PC mode!')
+  elif not ca.transceive(0x99, pack('B', level)):
+    print('Failed to set fan speed!')
+  elif not ca.transceive(0x9B, b'\x00', reply=0x9C, expect=b'\x02'):
+    print('Failed to switch to CC-Ease mode!')
+  else:
+    exit(0)
 
-    exit(1)
+  exit(1)
 
 
 if __name__ == '__main__':
-    if len(argv) != 3:
-        print('usage: %s socket://127.0.0.1:51944 <level>\n' % argv[0] +
-              '   or: %s /dev/ttyS0 <level>' % argv[0])
-        exit(1)
+  if len(argv) != 3:
+    print('usage: %s socket://127.0.0.1:51944 <level>\n' % argv[0] + '   or: %s /dev/ttyS0 <level>' % argv[0])
+    exit(1)
 
-    level = int(argv[2])
-    if level >= 0 and level <= 4:
-        main(argv[1], level)
+  level = int(argv[2])
+  if level >= 0 and level <= 4:
+    main(argv[1], level)
